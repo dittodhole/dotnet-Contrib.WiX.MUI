@@ -1,4 +1,4 @@
-![](assets/noun_translate language_1420706.png)
+![](assets/noun_1420706.png?raw=true)
 
 # dotnet-Contrib.WiX.MUI
 
