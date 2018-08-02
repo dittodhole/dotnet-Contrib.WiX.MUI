@@ -2,7 +2,7 @@
 
 # dotnet-Contrib.WiX.MUI
 
-> 
+> Create multi-language [Windows Installer](https://msdn.microsoft.com/de-de/library/cc185688.aspx) with [WiX Toolset](http://wixtoolset.org/)
 
 ## Installing
 
