@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ContribWiXMUIActive Condition="$(ContribWiXMUIActive) == ''">True</ContribWiXMUIActive>
+    <ContribWiXMUIPropsFile Condition="$(ContribWiXMUIPropsFile) == ''">$(ProjectDir)Contrib.WiX.MUI.props</ContribWiXMUIPropsFile>
+    <ContribWiXMUISourcePath>$(TargetPath)</ContribWiXMUISourcePath>
+    <ContribWiXMUITargetDir>$(TargetDir)MUI/</ContribWiXMUITargetDir>
+    <ContribWiXMUITargetPath>$(ContribWiXMUITargetDir)$(TargetName)$(TargetExt)</ContribWiXMUITargetPath>
+    <ContribWiXMUIBeforeTargets></ContribWiXMUIBeforeTargets>
+    <ContribWiXMUIAfterTargets>Build</ContribWiXMUIAfterTargets>
+  </PropertyGroup>
+  <Import Project="$(ContribWiXMUIPropsFile)" Condition="Exists($(ContribWiXMUIPropsFile))"/>
+  <ItemGroup>
+    <FileWrites Include="$(ContribWiXMUITargetPath)"/>
+  </ItemGroup>
+  <UsingTask TaskName="GetMsiTranPath" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
+    <ParameterGroup>
+      <Path Output="True" ParameterType="System.String"/>
+    </ParameterGroup>
+    <Task>
+      <Code Language="cs" Type="Class" Source="$(MSBuildThisFileDirectory)GetMsiTranPath.cs"/>
+    </Task>
+  </UsingTask>
+  <Target Name="ContribWiXMUI" BeforeTargets="$(ContribWiXMUIBeforeTargets)" AfterTargets="$(ContribWiXMUIAfterTargets)" Condition="$(ContribWiXMUIActive)">
+    <GetMsiTranPath Condition="$(ContribWiXMUIMsiTranPath) == ''">
+      <Output TaskParameter="Path" PropertyName="ContribWiXMUIMsiTranPath"/>
+    </GetMsiTranPath>
+    <Error Text="Could not find &quot;$(ContribWiXMUIMsiTranPath)&quot;" Condition="!Exists($(ContribWiXMUIMsiTranPath))"/>
+    <Message Text="MsiTran:              $(ContribWiXMUIMsiTranPath)"/>
+    <Message Text="Source:               $(ContribWiXMUISourcePath)"/>
+    <Message Text="Target:               $(ContribWiXMUITargetPath)"/>
+  </Target>
+</Project>
