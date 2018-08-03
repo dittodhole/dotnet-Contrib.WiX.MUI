@@ -12,7 +12,7 @@
 [![](https://img.shields.io/myget/dittodhole/vpre/Contrib.WiX.MUI.svg)][1]
 
 ```powershell
-PM> Install-Package -Id Contrib.WiX.MUI -pre --source https://www.myget.org/F/dittodhole/api/v2
+PM> Install-Package -Id Contrib.WiX.MUI -pre -Source https://www.myget.org/F/dittodhole/api/v2
 ```
 
 ### [nuget.org][3]
