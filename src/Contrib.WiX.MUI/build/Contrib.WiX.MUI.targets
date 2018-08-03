@@ -33,12 +33,12 @@
       <Code Language="cs" Type="Class" Source="$(MSBuildThisFileDirectory)GetWiLangIdPath.cs"/>
     </Task>
   </UsingTask>
-  <UsingTask TaskName="GetWisubstgPath" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
+  <UsingTask TaskName="GetWiSubStgPath" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
     <ParameterGroup>
       <Path Output="True" ParameterType="System.String"/>
     </ParameterGroup>
     <Task>
-      <Code Language="cs" Type="Class" Source="$(MSBuildThisFileDirectory)GetWisubstgPath.cs"/>
+      <Code Language="cs" Type="Class" Source="$(MSBuildThisFileDirectory)GetWiSubStgPath.cs"/>
     </Task>
   </UsingTask>
   <Target Name="ContribWiXMUI" BeforeTargets="$(ContribWiXMUIBeforeTargets)" AfterTargets="$(ContribWiXMUIAfterTargets)" Condition="$(ContribWiXMUIActive)">
@@ -47,9 +47,9 @@
     </GetMsiTranPath>
     <Error Text="Could not find &quot;$(ContribWiXMUIMsiTranPath)&quot;" Condition="!Exists($(ContribWiXMUIMsiTranPath))"/>
     <Message Text="MsiTran:              $(ContribWiXMUIMsiTranPath)"/>
-    <GetWisubstgPath Condition="$(ContribWiXMUIWisubstgPath) == ''">
+    <GetWiSubStgPath Condition="$(ContribWiXMUIWisubstgPath) == ''">
       <Output TaskParameter="Path" PropertyName="ContribWiXMUIWisubstgPath"/>
-    </GetWisubstgPath>
+    </GetWiSubStgPath>
     <Error Text="Could not find &quot;$(ContribWiXMUIWisubstgPath)&quot;" Condition="!Exists($(ContribWiXMUIWisubstgPath))"/>
     <Message Text="Wisubstg:             $(ContribWiXMUIWisubstgPath)"/>
     <ItemGroup>

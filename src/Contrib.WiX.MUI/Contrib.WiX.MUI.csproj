@@ -48,7 +48,7 @@
   <ItemGroup>
     <Compile Include="build\GetMsiTranPath.cs" />
     <Compile Include="build\GetWiLangIdPath.cs" />
-    <Compile Include="build\GetWisubstgPath.cs" />
+    <Compile Include="build\GetWiSubStgPath.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
