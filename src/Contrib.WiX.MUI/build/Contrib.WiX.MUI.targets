@@ -18,12 +18,18 @@
     <ContribWiXMUIBaseCulture Condition="$(ContribWiXMUIBaseCulture) == ''">neutral</ContribWiXMUIBaseCulture>
   </PropertyGroup>
   <UsingTask TaskName="GetMsiTranPath" AssemblyFile="$(MSBuildThisFileDirectory)..\tools\Contrib.WiX.MUI.dll"/>
+  <UsingTask TaskName="GetWisubstgPath" AssemblyFile="$(MSBuildThisFileDirectory)..\tools\Contrib.WiX.MUI.dll"/>
   <Target Name="ContribWiXMUI" BeforeTargets="$(ContribWiXMUIBeforeTargets)" AfterTargets="$(ContribWiXMUIAfterTargets)" Condition="$(ContribWiXMUIActive)">
     <GetMsiTranPath Condition="$(ContribWiXMUIMsiTranPath) == ''">
       <Output TaskParameter="Path" PropertyName="ContribWiXMUIMsiTranPath"/>
     </GetMsiTranPath>
     <Error Text="Could not find &quot;$(ContribWiXMUIMsiTranPath)&quot;" Condition="!Exists($(ContribWiXMUIMsiTranPath))"/>
     <Message Text="MsiTran:              $(ContribWiXMUIMsiTranPath)"/>
+    <GetWisubstgPath Condition="$(ContribWiXMUIWisubstgPath) == ''">
+      <Ouptut TaskParameter="Path" ProptertyName="ContribWiXMUIWisubstgPath"/>
+    </GetWisubstgPath>
+    <Error Text="Could not find &quot;$(ContribWiXMUIWisubstgPath)&quot;" Condition="!Exists($(ContribWiXMUIWisubstgPath))"/>
+    <Message Text="Wisubstg:             $(ContribWiXMUIWisubstgPath)"/>
     <ItemGroup>
       <_ContribWiXMUISourcePath Include="$(ContribWiXMUISourceDir)%(CultureGroup.OutputFolder)$(TargetName)$(TargetExt)">
         <Culture>%(Identity)</Culture>
