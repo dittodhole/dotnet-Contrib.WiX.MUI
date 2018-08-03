@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ContribWiXMUIActive Condition="$(ContribWiXMUIActive) == ''">False</ContribWiXMUIActive>
+    <ContribWiXMUIPropsFile Condition="$(ContribWiXMUIPropsFile) == ''">$(ProjectDir)Contrib.WiX.MUI.props</ContribWiXMUIPropsFile>
+    <ContribWiXMUISourceDir>$(TargetDir)</ContribWiXMUISourceDir>
+    <ContribWiXMUITargetDir>$(TargetDir)MUI\</ContribWiXMUITargetDir>
+    <ContribWiXMUITargetPath>$(ContribWiXMUITargetDir)$(TargetName)$(TargetExt)</ContribWiXMUITargetPath>
+    <ContribWiXMUIBeforeTargets></ContribWiXMUIBeforeTargets>
+    <ContribWiXMUIAfterTargets>Build</ContribWiXMUIAfterTargets>
+    <ContribWiXMUIMainCulture>neutral</ContribWiXMUIMainCulture>
+  </PropertyGroup>
+  <Import Project="$(ContribWiXMUIPropsFile)" Condition="Exists($(ContribWiXMUIPropsFile))"/>
+  <ItemGroup>
+    <FileWrites Include="$(ContribWiXMUITargetDir)**\*"/>
+  </ItemGroup>
+  <PropertyGroup>
+    <ContribWiXMUIBaseCulture Condition="$(ContribWiXMUIBaseCulture) == ''">neutral</ContribWiXMUIBaseCulture>
+  </PropertyGroup>
+  <UsingTask TaskName="AddLocaleIdentifierToItemMetadata" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
+    <ParameterGroup>
+      <Items Required="True" ParameterType="Microsoft.Build.Framework.ITaskItem[]"/>
+      <EnrichedItems Output="True" ParameterType="Microsoft.Build.Framework.ITaskItem[]"/>
+    </ParameterGroup>
+    <Task>
+      <Code Language="cs" Type="Class" Source="$(MSBuildThisFileDirectory)AddLocaleIdentifierToItemMetadata.cs"/>
+    </Task>
+  </UsingTask>
+  <UsingTask TaskName="GetMsiTranPath" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
+    <ParameterGroup>
+      <Path Output="True" ParameterType="System.String"/>
+    </ParameterGroup>
+    <Task>
+      <Code Language="cs" Type="Class" Source="$(MSBuildThisFileDirectory)GetMsiTranPath.cs"/>
+    </Task>
+  </UsingTask>
+  <UsingTask TaskName="GetWiLangIdPath" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
+    <ParameterGroup>
+      <Path Output="True" ParameterType="System.String"/>
+    </ParameterGroup>
+    <Task>
+      <Code Language="cs" Type="Class" Source="$(MSBuildThisFileDirectory)GetWiLangIdPath.cs"/>
+    </Task>
+  </UsingTask>
+  <UsingTask TaskName="GetWiSubStgPath" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
+    <ParameterGroup>
+      <Path Output="True" ParameterType="System.String"/>
+    </ParameterGroup>
+    <Task>
+      <Code Language="cs" Type="Class" Source="$(MSBuildThisFileDirectory)GetWiSubStgPath.cs"/>
+    </Task>
+  </UsingTask>
+  <Target Name="ContribWiXMUI" BeforeTargets="$(ContribWiXMUIBeforeTargets)" AfterTargets="$(ContribWiXMUIAfterTargets)" Condition="$(ContribWiXMUIActive)">
+    <GetMsiTranPath Condition="$(ContribWiXMUIMsiTranPath) == ''">
+      <Output TaskParameter="Path" PropertyName="ContribWiXMUIMsiTranPath"/>
+    </GetMsiTranPath>
+    <Error Text="Could not find &quot;$(ContribWiXMUIMsiTranPath)&quot;" Condition="!Exists($(ContribWiXMUIMsiTranPath))"/>
+    <Message Text="MsiTran:              $(ContribWiXMUIMsiTranPath)"/>
+    <GetWiLangIdPath Condition="$(ContribWiXMUIWiLangIdPath) == ''">
+      <Output TaskParameter="Path" PropertyName="ContribWiXMUIWiLangIdPath"/>
+    </GetWiLangIdPath>
+    <Error Text="Could not find &quot;$(ContribWiXMUIWiLangIdPath)&quot;" Condition="!Exists($(ContribWiXMUIWiLangIdPath))"/>
+    <Message Text="WiLangId:             $(ContribWiXMUIWiLangIdPath)"/>
+    <GetWiSubStgPath Condition="$(ContribWiXMUIWiSubStgPath) == ''">
+      <Output TaskParameter="Path" PropertyName="ContribWiXMUIWiSubStgPath"/>
+    </GetWiSubStgPath>
+    <Error Text="Could not find &quot;$(ContribWiXMUIWiSubStgPath)&quot;" Condition="!Exists($(ContribWiXMUIWiSubStgPath))"/>
+    <Message Text="WiSubStg:             $(ContribWiXMUIWiSubStgPath)"/>
+    <ItemGroup>
+      <_ContribWiXMUISourcePath Include="$(ContribWiXMUISourceDir)%(CultureGroup.OutputFolder)$(TargetName)$(TargetExt)">
+        <Culture>%(Identity)</Culture>
+      </_ContribWiXMUISourcePath>
+      <_ContribWiXMUIMainSourcePath Include="@(_ContribWiXMUISourcePath)" Condition="%(Culture) == $(ContribWiXMUIMainCulture)"/>
+      <_ContribWixMUIMergeSourcePath Include="@(_ContribWiXMUISourcePath)" Exclude="@(_ContribWiXMUIMainSourcePath)">
+        <MSTPath>$(ContribWiXMUITargetDir)%(Culture).mst</MSTPath>
+      </_ContribWixMUIMergeSourcePath>
+    </ItemGroup>
+    <AddLocaleIdentifierToItemMetadata Items="@(_ContribWixMUIMergeSourcePath)">
+      <Output TaskParameter="EnrichedItems" ItemName="_FinalContribWixMUIMergeSourcePath" />
+    </AddLocaleIdentifierToItemMetadata>
+    <Error Text="Could not determine main $(TargetExt) for culture &quot;$(ContribWiXMUIMainCulture)&quot;" Condition="@(_ContribWiXMUIMainSourcePath->Count()) != 1"/>
+    <Message Text="SourcePath (main):    %(_ContribWiXMUIMainSourcePath.Identity) --> $(ContribWiXMUITargetPath)"/>
+    <Message Text="SourcePath (merge):   %(_FinalContribWixMUIMergeSourcePath.Identity) --> %(MSTPath) %(LocaleIdentifier)"/>
+    <Exec Command="CSCRIPT &quot;$(ContribWiXMUIWiLangIdPath)&quot; &quot;%(_FinalContribWixMUIMergeSourcePath.Identity)&quot; Product &quot;%(LocaleIdentifier)&quot;"/>
+    <MakeDir Directories="$(ContribWiXMUITargetDir)" Condition="!Exists($(ContribWiXMUITargetDir))"/>
+    <Copy SourceFiles="@(_ContribWiXMUIMainSourcePath)" DestinationFolder="$(ContribWiXMUITargetDir)" />
+    <Exec Command="&quot;$(ContribWiXMUIMsiTranPath)&quot; -g &quot;$(ContribWiXMUITargetPath)&quot; &quot;%(_FinalContribWixMUIMergeSourcePath.Identity)&quot; &quot;%(MSTPath)&quot;"/>
+    <Exec Command="CSCRIPT &quot;$(ContribWiXMUIWiSubStgPath)&quot; &quot;$(ContribWiXMUITargetPath)&quot; &quot;%(_FinalContribWixMUIMergeSourcePath.MSTPath)&quot; &quot;%(LocaleIdentifier)&quot;"/>
+    <Exec Command="CSCRIPT &quot;$(ContribWiXMUIWiSubStgPath)&quot; &quot;$(ContribWiXMUITargetPath)&quot;"/>
+  </Target>
+</Project>
