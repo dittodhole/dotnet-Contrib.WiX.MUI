@@ -23,6 +23,8 @@ namespace Contrib.WiX.MUI
       var result = true;
       foreach (var item in this.Items)
       {
+        this.Log.LogMessage(item.ItemSpec);
+
         int localeIdentifier;
 
         var culture = item.GetMetadata(AddLocaleIdentifierToItemMetadata.CultureMetadataName);
@@ -52,6 +54,10 @@ namespace Contrib.WiX.MUI
 
         item.SetMetadata(AddLocaleIdentifierToItemMetadata.LocaleIdentifierMetadataItemName,
                          localeIdentifier.ToString());
+
+        this.Log.LogMessage("Culture '{0}' --> LCID '{1}'",
+                            culture,
+                            localeIdentifier);
       }
       return result;
     }
