@@ -81,8 +81,11 @@
     <Error Text="Could not determine main $(TargetExt) for culture &quot;$(ContribWiXMUIMainCulture)&quot;" Condition="@(_ContribWiXMUIMainSourcePath->Count()) != 1"/>
     <Message Text="SourcePath (main):    %(_ContribWiXMUIMainSourcePath.Identity) --> $(ContribWiXMUITargetPath)"/>
     <Message Text="SourcePath (merge):   %(_FinalContribWixMUIMergeSourcePath.Identity) --> %(MSTPath) %(LocaleIdentifier)"/>
+    <Exec Command="CSCRIPT &quot;$(ContribWiXMUIWiLangIdPath)&quot; &quot;%(_FinalContribWixMUIMergeSourcePath.Identity)&quot; Product &quot;%(LocaleIdentifier)&quot;"/>
     <MakeDir Directories="$(ContribWiXMUITargetDir)" Condition="!Exists($(ContribWiXMUITargetDir))"/>
     <Copy SourceFiles="@(_ContribWiXMUIMainSourcePath)" DestinationFolder="$(ContribWiXMUITargetDir)" />
     <Exec Command="&quot;$(ContribWiXMUIMsiTranPath)&quot; -g &quot;$(ContribWiXMUITargetPath)&quot; &quot;%(_FinalContribWixMUIMergeSourcePath.Identity)&quot; &quot;%(MSTPath)&quot;"/>
+    <Exec Command="CSCRIPT &quot;$(ContribWiXMUIWiSubStgPath)&quot; &quot;$(ContribWiXMUITargetPath)&quot; &quot;%(_FinalContribWixMUIMergeSourcePath.MSTPath)&quot; &quot;%(LocaleIdentifier)&quot;"/>
+    <Exec Command="CSCRIPT &quot;$(ContribWiXMUIWiSubStgPath)&quot; &quot;$(ContribWiXMUITargetPath)&quot;"/>
   </Target>
 </Project>
