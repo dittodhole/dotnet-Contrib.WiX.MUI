@@ -76,7 +76,7 @@
       </_ContribWixMUIMergeSourcePath>
     </ItemGroup>
     <Error Text="Could not determine main $(TargetExt) for culture &quot;$(ContribWiXMUIMainCulture)&quot;" Condition="@(_ContribWiXMUIMainSourcePath->Count()) != 1"/>
-    <Message Text="SourcePath (main):    %(_ContribWiXMUIMainSourcePath.Identity) --> $(ContribWiXMUITargetPath)"/>"/>
+    <Message Text="SourcePath (main):    %(_ContribWiXMUIMainSourcePath.Identity) --> $(ContribWiXMUITargetPath)"/>
     <Message Text="SourcePath (merge):   %(_ContribWixMUIMergeSourcePath.Identity) --> %(MSTPath)"/>
     <MakeDir Directories="$(ContribWiXMUITargetDir)" Condition="!Exists($(ContribWiXMUITargetDir))"/>
     <Copy SourceFiles="@(_ContribWiXMUIMainSourcePath)" DestinationFolder="$(ContribWiXMUITargetDir)" />
