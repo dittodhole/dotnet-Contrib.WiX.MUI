@@ -47,11 +47,16 @@
     </GetMsiTranPath>
     <Error Text="Could not find &quot;$(ContribWiXMUIMsiTranPath)&quot;" Condition="!Exists($(ContribWiXMUIMsiTranPath))"/>
     <Message Text="MsiTran:              $(ContribWiXMUIMsiTranPath)"/>
-    <GetWiSubStgPath Condition="$(ContribWiXMUIWisubstgPath) == ''">
-      <Output TaskParameter="Path" PropertyName="ContribWiXMUIWisubstgPath"/>
+    <GetWiLangIdPath Condition="$(ContribWiXMUIWiLangIdPath) == ''">
+      <Output TaskParameter="Path" PropertyName="ContribWiXMUIWiLangIdPath"/>
+    </GetWiLangIdPath>
+    <Error Text="Could not find &quot;$(ContribWiXMUIWiLangIdPath)&quot;" Condition="!Exists($(ContribWiXMUIWiLangIdPath))"/>
+    <Message Text="WiLangId:             $(ContribWiXMUIWiLangIdPath)"/>
+    <GetWiSubStgPath Condition="$(ContribWiXMUIWiSubStgPath) == ''">
+      <Output TaskParameter="Path" PropertyName="ContribWiXMUIWiSubStgPath"/>
     </GetWiSubStgPath>
-    <Error Text="Could not find &quot;$(ContribWiXMUIWisubstgPath)&quot;" Condition="!Exists($(ContribWiXMUIWisubstgPath))"/>
-    <Message Text="Wisubstg:             $(ContribWiXMUIWisubstgPath)"/>
+    <Error Text="Could not find &quot;$(ContribWiXMUIWiSubStgPath)&quot;" Condition="!Exists($(ContribWiXMUIWiSubStgPath))"/>
+    <Message Text="WiSubStg:             $(ContribWiXMUIWiSubStgPath)"/>
     <ItemGroup>
       <_ContribWiXMUISourcePath Include="$(ContribWiXMUISourceDir)%(CultureGroup.OutputFolder)$(TargetName)$(TargetExt)">
         <Culture>%(Identity)</Culture>
