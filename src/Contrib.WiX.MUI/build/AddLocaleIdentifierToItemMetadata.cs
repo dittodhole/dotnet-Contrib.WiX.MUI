@@ -20,7 +20,6 @@ namespace Contrib.WiX.MUI
     /// <inheritdoc />
     public override bool Execute()
     {
-      var result = true;
       foreach (var item in this.Items)
       {
         int localeIdentifier;
@@ -43,10 +42,11 @@ namespace Contrib.WiX.MUI
             var cultureInfo = CultureInfo.GetCultureInfo(culture);
             localeIdentifier = cultureInfo.LCID;
           }
-          catch (CultureNotFoundException)
+          catch (CultureNotFoundException cultureNotFoundException)
           {
-            localeIdentifier = 0;
-            result = false;
+            this.Log.LogErrorFromException(cultureNotFoundException);
+
+            return false;
           }
         }
 
@@ -57,7 +57,8 @@ namespace Contrib.WiX.MUI
                             item.ItemSpec,
                             localeIdentifier);
       }
-      return result;
+
+      return true;
     }
   }
 }
