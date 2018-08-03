@@ -17,8 +17,30 @@
   <PropertyGroup>
     <ContribWiXMUIBaseCulture Condition="$(ContribWiXMUIBaseCulture) == ''">neutral</ContribWiXMUIBaseCulture>
   </PropertyGroup>
-  <UsingTask TaskName="GetMsiTranPath" AssemblyFile="$(MSBuildThisFileDirectory)..\tools\Contrib.WiX.MUI.dll"/>
-  <UsingTask TaskName="GetWisubstgPath" AssemblyFile="$(MSBuildThisFileDirectory)..\tools\Contrib.WiX.MUI.dll"/>
+  <UsingTask TaskName="GetMsiTranPath" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
+    <ParameterGroup>
+      <Path Output="True" ParameterType="System.String"/>
+    </ParameterGroup>
+    <Task>
+      <Code Language="cs" Type="Class" Source="$(MSBuildThisFileDirectory)GetMsiTranPath.cs"/>
+    </Task>
+  </UsingTask>
+  <UsingTask TaskName="GetWilangidPath" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
+    <ParameterGroup>
+      <Path Output="True" ParameterType="System.String"/>
+    </ParameterGroup>
+    <Task>
+      <Code Language="cs" Type="Class" Source="$(MSBuildThisFileDirectory)GetWilangidPath.cs"/>
+    </Task>
+  </UsingTask>
+  <UsingTask TaskName="GetWisubstgPath" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
+    <ParameterGroup>
+      <Path Output="True" ParameterType="System.String"/>
+    </ParameterGroup>
+    <Task>
+      <Code Language="cs" Type="Class" Source="$(MSBuildThisFileDirectory)GetWisubstgPath.cs"/>
+    </Task>
+  </UsingTask>
   <Target Name="ContribWiXMUI" BeforeTargets="$(ContribWiXMUIBeforeTargets)" AfterTargets="$(ContribWiXMUIAfterTargets)" Condition="$(ContribWiXMUIActive)">
     <GetMsiTranPath Condition="$(ContribWiXMUIMsiTranPath) == ''">
       <Output TaskParameter="Path" PropertyName="ContribWiXMUIMsiTranPath"/>
