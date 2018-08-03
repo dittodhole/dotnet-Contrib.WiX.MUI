@@ -25,12 +25,12 @@
       <Code Language="cs" Type="Class" Source="$(MSBuildThisFileDirectory)GetMsiTranPath.cs"/>
     </Task>
   </UsingTask>
-  <UsingTask TaskName="GetWilangidPath" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
+  <UsingTask TaskName="GetWiLangIdPath" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
     <ParameterGroup>
       <Path Output="True" ParameterType="System.String"/>
     </ParameterGroup>
     <Task>
-      <Code Language="cs" Type="Class" Source="$(MSBuildThisFileDirectory)GetWilangidPath.cs"/>
+      <Code Language="cs" Type="Class" Source="$(MSBuildThisFileDirectory)GetWiLangIdPath.cs"/>
     </Task>
   </UsingTask>
   <UsingTask TaskName="GetWisubstgPath" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">

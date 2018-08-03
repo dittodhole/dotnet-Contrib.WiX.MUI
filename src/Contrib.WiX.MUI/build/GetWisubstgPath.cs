@@ -7,9 +7,9 @@ using Microsoft.Build.Utilities;
 
 namespace Contrib.WiX.MUI
 {
-  public partial class GetWisubstgPath : Task
+  public partial class GetWiSubStgPath : Task
   {
-    public const string WisubstgFileName = "wisubstg.vbs";
+    public const string WisubstgFileName = "WiSubStg.vbs";
 
     [Output]
     public virtual string Path { get; set; }
@@ -17,7 +17,7 @@ namespace Contrib.WiX.MUI
     /// <inheritdoc />
     public override bool Execute()
     {
-      this.Path = ToolLocationHelper.GetPathToWindowsSdkFile(GetWisubstgPath.WisubstgFileName,
+      this.Path = ToolLocationHelper.GetPathToWindowsSdkFile(GetWiSubStgPath.WisubstgFileName,
                                                              TargetDotNetFrameworkVersion.VersionLatest,
                                                              VisualStudioVersion.VersionLatest,
                                                              DotNetFrameworkArchitecture.Current);
