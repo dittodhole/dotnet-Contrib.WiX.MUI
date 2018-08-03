@@ -13,7 +13,6 @@
   </metadata>
   <files>
     <file src="build\Contrib.WiX.MUI.targets" target="build" />
-    <file src="build\GetMsiTranPath.cs" target="build"/>
     <file src="content\Contrib.WiX.MUI.props" target="content" />
   </files>
 </package>
