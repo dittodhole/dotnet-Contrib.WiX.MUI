@@ -1,33 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <ContribWiXMUIActive Condition="$(ContribWiXMUIActive) == ''">True</ContribWiXMUIActive>
+    <ContribWiXMUIActive Condition="$(ContribWiXMUIActive) == ''">False</ContribWiXMUIActive>
     <ContribWiXMUIPropsFile Condition="$(ContribWiXMUIPropsFile) == ''">$(ProjectDir)Contrib.WiX.MUI.props</ContribWiXMUIPropsFile>
-    <ContribWiXMUISourcePath>$(TargetPath)</ContribWiXMUISourcePath>
-    <ContribWiXMUITargetDir>$(TargetDir)MUI/</ContribWiXMUITargetDir>
+    <ContribWiXMUISourceDir>$(TargetDir)</ContribWiXMUISourceDir>
+    <ContribWiXMUITargetDir>$(TargetDir)MUI\</ContribWiXMUITargetDir>
     <ContribWiXMUITargetPath>$(ContribWiXMUITargetDir)$(TargetName)$(TargetExt)</ContribWiXMUITargetPath>
     <ContribWiXMUIBeforeTargets></ContribWiXMUIBeforeTargets>
     <ContribWiXMUIAfterTargets>Build</ContribWiXMUIAfterTargets>
+    <ContribWiXMUIMainCulture>neutral</ContribWiXMUIMainCulture>
   </PropertyGroup>
   <Import Project="$(ContribWiXMUIPropsFile)" Condition="Exists($(ContribWiXMUIPropsFile))"/>
   <ItemGroup>
-    <FileWrites Include="$(ContribWiXMUITargetPath)"/>
+    <FileWrites Include="$(ContribWiXMUITargetDir)**\*"/>
   </ItemGroup>
-  <UsingTask TaskName="GetMsiTranPath" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
-    <ParameterGroup>
-      <Path Output="True" ParameterType="System.String"/>
-    </ParameterGroup>
-    <Task>
-      <Code Language="cs" Type="Class" Source="$(MSBuildThisFileDirectory)GetMsiTranPath.cs"/>
-    </Task>
-  </UsingTask>
+  <PropertyGroup>
+    <ContribWiXMUIBaseCulture Condition="$(ContribWiXMUIBaseCulture) == ''">neutral</ContribWiXMUIBaseCulture>
+  </PropertyGroup>
+  <UsingTask TaskName="GetMsiTranPath" AssemblyFile="$(MSBuildThisFileDirectory)..\tools\Contrib.WiX.MUI.dll"/>
   <Target Name="ContribWiXMUI" BeforeTargets="$(ContribWiXMUIBeforeTargets)" AfterTargets="$(ContribWiXMUIAfterTargets)" Condition="$(ContribWiXMUIActive)">
     <GetMsiTranPath Condition="$(ContribWiXMUIMsiTranPath) == ''">
       <Output TaskParameter="Path" PropertyName="ContribWiXMUIMsiTranPath"/>
     </GetMsiTranPath>
     <Error Text="Could not find &quot;$(ContribWiXMUIMsiTranPath)&quot;" Condition="!Exists($(ContribWiXMUIMsiTranPath))"/>
     <Message Text="MsiTran:              $(ContribWiXMUIMsiTranPath)"/>
-    <Message Text="Source:               $(ContribWiXMUISourcePath)"/>
+    <ItemGroup>
+      <_ContribWiXMUISourcePath Include="$(ContribWiXMUISourceDir)%(CultureGroup.OutputFolder)$(TargetName)$(TargetExt)">
+        <Culture>%(Identity)</Culture>
+        <MSTPath>$(ContribWiXMUITargetDir)%(Identity).mst</MSTPath>
+      </_ContribWiXMUISourcePath>
+      <_ContribWiXMUIMainSourcePath Include="%(_ContribWiXMUISourcePath.Identity)" Condition="%(Culture) == $(ContribWiXMUIMainCulture)"/>
+      <_ContribWixMUIMergeSourcePath Include="@(_ContribWiXMUISourcePath)" Exclude="@(_ContribWiXMUIMainSourcePath)"/>
+    </ItemGroup>
+    <Error Text="Could not determine main $(TargetExt) for culture &quot;$(ContribWiXMUIMainCulture)&quot;" Condition="@(_ContribWiXMUIMainSourcePath->Count()) != 1"/>
+    <Message Text="SourcePath (main):    %(_ContribWiXMUIMainSourcePath.Identity)"/>
+    <Message Text="SourcePath (merge):   %(_ContribWixMUIMergeSourcePath.Identity)"/>
     <Message Text="Target:               $(ContribWiXMUITargetPath)"/>
+    <MakeDir Directories="$(ContribWiXMUITargetDir)" Condition="!Exists($(ContribWiXMUITargetDir))"/>
+    <Copy SourceFiles="@(_ContribWiXMUIMainSourcePath)" DestinationFolder="$(ContribWiXMUITargetDir)" />
+    <Exec Command="&quot;$(ContribWiXMUIMsiTranPath)&quot; -g &quot;$(ContribWiXMUITargetPath)&quot; &quot;%(_ContribWixMUIMergeSourcePath.Identity)&quot; &quot;%(MSTPath)&quot;"/>
   </Target>
 </Project>
