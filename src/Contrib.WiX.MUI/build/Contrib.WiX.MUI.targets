@@ -20,6 +20,7 @@
   <UsingTask TaskName="AddLocaleIdentifierToItemMetadata" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
     <ParameterGroup>
       <Items Required="True" ParameterType="Microsoft.Build.Framework.ITaskItem[]"/>
+      <EnrichedItems Output="True" ParameterType="Microsoft.Build.Framework.ITaskItem[]"/>
     </ParameterGroup>
     <Task>
       <Code Language="cs" Type="Class" Source="$(MSBuildThisFileDirectory)AddLocaleIdentifierToItemMetadata.cs"/>
@@ -75,7 +76,9 @@
         <LocaleIdentifier>0</LocaleIdentifier>
       </_ContribWixMUIMergeSourcePath>
     </ItemGroup>
-    <AddLocaleIdentifierToItemMetadata Items="@(_ContribWixMUIMergeSourcePath)" />
+    <AddLocaleIdentifierToItemMetadata Items="@(_ContribWixMUIMergeSourcePath)">
+      <Output TaskParameter="EnrichedItems" ItemName="_ContribWixMUIMergeSourcePath" />
+    </AddLocaleIdentifierToItemMetadata>
     <Error Text="Could not determine main $(TargetExt) for culture &quot;$(ContribWiXMUIMainCulture)&quot;" Condition="@(_ContribWiXMUIMainSourcePath->Count()) != 1"/>
     <Message Text="SourcePath (main):    %(_ContribWiXMUIMainSourcePath.Identity) --> $(ContribWiXMUITargetPath)"/>
     <Message Text="SourcePath (merge):   %(_ContribWixMUIMergeSourcePath.Identity) --> %(MSTPath) %(LocaleIdentifier)"/>

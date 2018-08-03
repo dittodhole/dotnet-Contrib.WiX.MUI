@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
@@ -17,9 +18,14 @@ namespace Contrib.WiX.MUI
     [Required]
     public virtual ITaskItem[] Items { get; set; }
 
+    [Output]
+    public virtual ITaskItem[] EnrichedItems { get; set; }
+
     /// <inheritdoc />
     public override bool Execute()
     {
+      var result = new List<ITaskItem>(this.Items.Length);
+
       foreach (var item in this.Items)
       {
         int localeIdentifier;
@@ -56,7 +62,11 @@ namespace Contrib.WiX.MUI
         this.Log.LogMessage("Assigned LCID:        {0} --> {1}",
                             item.ItemSpec,
                             localeIdentifier);
+
+        result.Add(item);
       }
+
+      this.EnrichedItems = result.ToArray();
 
       return true;
     }
