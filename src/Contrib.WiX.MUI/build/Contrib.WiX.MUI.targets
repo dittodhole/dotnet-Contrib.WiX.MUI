@@ -73,17 +73,16 @@
       <_ContribWiXMUIMainSourcePath Include="@(_ContribWiXMUISourcePath)" Condition="%(Culture) == $(ContribWiXMUIMainCulture)"/>
       <_ContribWixMUIMergeSourcePath Include="@(_ContribWiXMUISourcePath)" Exclude="@(_ContribWiXMUIMainSourcePath)">
         <MSTPath>$(ContribWiXMUITargetDir)%(Culture).mst</MSTPath>
-        <LocaleIdentifier>0</LocaleIdentifier>
       </_ContribWixMUIMergeSourcePath>
     </ItemGroup>
     <AddLocaleIdentifierToItemMetadata Items="@(_ContribWixMUIMergeSourcePath)">
-      <Output TaskParameter="EnrichedItems" ItemName="_ContribWixMUIMergeSourcePath" />
+      <Output TaskParameter="EnrichedItems" ItemName="_FinalContribWixMUIMergeSourcePath" />
     </AddLocaleIdentifierToItemMetadata>
     <Error Text="Could not determine main $(TargetExt) for culture &quot;$(ContribWiXMUIMainCulture)&quot;" Condition="@(_ContribWiXMUIMainSourcePath->Count()) != 1"/>
     <Message Text="SourcePath (main):    %(_ContribWiXMUIMainSourcePath.Identity) --> $(ContribWiXMUITargetPath)"/>
-    <Message Text="SourcePath (merge):   %(_ContribWixMUIMergeSourcePath.Identity) --> %(MSTPath) %(LocaleIdentifier)"/>
+    <Message Text="SourcePath (merge):   %(_FinalContribWixMUIMergeSourcePath.Identity) --> %(MSTPath) %(LocaleIdentifier)"/>
     <MakeDir Directories="$(ContribWiXMUITargetDir)" Condition="!Exists($(ContribWiXMUITargetDir))"/>
     <Copy SourceFiles="@(_ContribWiXMUIMainSourcePath)" DestinationFolder="$(ContribWiXMUITargetDir)" />
-    <Exec Command="&quot;$(ContribWiXMUIMsiTranPath)&quot; -g &quot;$(ContribWiXMUITargetPath)&quot; &quot;%(_ContribWixMUIMergeSourcePath.Identity)&quot; &quot;%(MSTPath)&quot;"/>
+    <Exec Command="&quot;$(ContribWiXMUIMsiTranPath)&quot; -g &quot;$(ContribWiXMUITargetPath)&quot; &quot;%(_FinalContribWixMUIMergeSourcePath.Identity)&quot; &quot;%(MSTPath)&quot;"/>
   </Target>
 </Project>
