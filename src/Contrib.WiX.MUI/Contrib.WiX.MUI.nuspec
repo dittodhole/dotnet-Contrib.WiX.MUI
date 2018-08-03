@@ -13,6 +13,7 @@
   </metadata>
   <files>
     <file src="build\Contrib.WiX.MUI.targets" target="build" />
+    <file src="build\GetLocaleIdentifierFromCultureName.cs" target="build" />
     <file src="build\GetMsiTranPath.cs" target="build" />
     <file src="build\GetWiLangIdPath.cs" target="build" />
     <file src="build\GetWiSubStgPath.cs" target="build" />
