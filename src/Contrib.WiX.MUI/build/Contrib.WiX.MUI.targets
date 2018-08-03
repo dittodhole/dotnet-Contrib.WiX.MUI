@@ -60,10 +60,11 @@
     <ItemGroup>
       <_ContribWiXMUISourcePath Include="$(ContribWiXMUISourceDir)%(CultureGroup.OutputFolder)$(TargetName)$(TargetExt)">
         <Culture>%(Identity)</Culture>
-        <MSTPath>$(ContribWiXMUITargetDir)%(Identity).mst</MSTPath>
       </_ContribWiXMUISourcePath>
       <_ContribWiXMUIMainSourcePath Include="%(_ContribWiXMUISourcePath.Identity)" Condition="%(Culture) == $(ContribWiXMUIMainCulture)"/>
-      <_ContribWixMUIMergeSourcePath Include="@(_ContribWiXMUISourcePath)" Exclude="@(_ContribWiXMUIMainSourcePath)"/>
+      <_ContribWixMUIMergeSourcePath Include="@(_ContribWiXMUISourcePath)" Exclude="@(_ContribWiXMUIMainSourcePath)">
+        <MSTPath>$(ContribWiXMUITargetDir)%(Culture).mst</MSTPath>
+      </_ContribWixMUIMergeSourcePath>
     </ItemGroup>
     <Error Text="Could not determine main $(TargetExt) for culture &quot;$(ContribWiXMUIMainCulture)&quot;" Condition="@(_ContribWiXMUIMainSourcePath->Count()) != 1"/>
     <Message Text="SourcePath (main):    %(_ContribWiXMUIMainSourcePath.Identity)"/>
