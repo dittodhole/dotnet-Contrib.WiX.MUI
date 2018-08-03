@@ -10,6 +10,9 @@
     <iconUrl>https://cdn.rawgit.com/dittodhole/dotnet-Contrib.WiX.MUI/$branch$/assets/noun_1420706.png</iconUrl>
     <description>Create .tlb-files upon compilation.</description>
     <developmentDependency>true</developmentDependency>
+    <dependencies>
+      <dependency id="WiX" version="3.11.0" />
+    </dependencies>
   </metadata>
   <files>
     <file src="build\Contrib.WiX.MUI.targets" target="build" />
