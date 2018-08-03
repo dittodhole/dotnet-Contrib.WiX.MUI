@@ -17,13 +17,12 @@
   <PropertyGroup>
     <ContribWiXMUIBaseCulture Condition="$(ContribWiXMUIBaseCulture) == ''">neutral</ContribWiXMUIBaseCulture>
   </PropertyGroup>
-  <UsingTask TaskName="GetLocaleIdentifierFromCultureName" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
+  <UsingTask TaskName="AddLocaleIdentifierToItemMetadata" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
     <ParameterGroup>
-      <CultureName Required="True" ParameterType="System.String"/>
-      <LocaleIdentifier Output="True" ParameterType="System.Int32"/>
+      <Items Required="True" ParameterType="Microsoft.Build.Framework.ITaskItem[]"/>
     </ParameterGroup>
     <Task>
-      <Code Language="cs" Type="Class" Source="$(MSBuildThisFileDirectory)GetLocaleIdentifierFromCultureName.cs"/>
+      <Code Language="cs" Type="Class" Source="$(MSBuildThisFileDirectory)AddLocaleIdentifierToItemMetadata.cs"/>
     </Task>
   </UsingTask>
   <UsingTask TaskName="GetMsiTranPath" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
@@ -75,9 +74,10 @@
         <MSTPath>$(ContribWiXMUITargetDir)%(Culture).mst</MSTPath>
       </_ContribWixMUIMergeSourcePath>
     </ItemGroup>
+    <AddLocaleIdentifierToItemMetadata Items="@(_ContribWixMUIMergeSourcePath)" />
     <Error Text="Could not determine main $(TargetExt) for culture &quot;$(ContribWiXMUIMainCulture)&quot;" Condition="@(_ContribWiXMUIMainSourcePath->Count()) != 1"/>
     <Message Text="SourcePath (main):    %(_ContribWiXMUIMainSourcePath.Identity) --> $(ContribWiXMUITargetPath)"/>
-    <Message Text="SourcePath (merge):   %(_ContribWixMUIMergeSourcePath.Identity) --> %(MSTPath)"/>
+    <Message Text="SourcePath (merge):   %(_ContribWixMUIMergeSourcePath.Identity) %(LocaleIdentifier) --> %(MSTPath)"/>
     <MakeDir Directories="$(ContribWiXMUITargetDir)" Condition="!Exists($(ContribWiXMUITargetDir))"/>
     <Copy SourceFiles="@(_ContribWiXMUIMainSourcePath)" DestinationFolder="$(ContribWiXMUITargetDir)" />
     <Exec Command="&quot;$(ContribWiXMUIMsiTranPath)&quot; -g &quot;$(ContribWiXMUITargetPath)&quot; &quot;%(_ContribWixMUIMergeSourcePath.Identity)&quot; &quot;%(MSTPath)&quot;"/>
